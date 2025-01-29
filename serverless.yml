@@ -102,6 +102,7 @@ layers:
 
 functions:
   bucketWatcher:
+    memorySize: 128
     package:
       patterns:
         - '!layers/**'
@@ -120,6 +121,9 @@ functions:
             - prefix: pronto/
     layers:
       - {Ref: LayerDependenciesLambdaLayer}
+    environment:
+      ready_queue_url: { Ref: readyQueue }
+      preparation_queue_url: { Ref: preparationQueue }
   # preparationWatcher:
   #   handler: handler.hello
   # readyWatcher:
