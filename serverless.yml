@@ -124,10 +124,43 @@ functions:
     environment:
       ready_queue_url: { Ref: readyQueue }
       preparation_queue_url: { Ref: preparationQueue }
-  # preparationWatcher:
-  #   handler: handler.hello
-  # readyWatcher:
-  #   handler: handler.hello
+  preparationWatcher:
+    memorySize: 128
+    package:
+      patterns:
+        - '!layers/**'
+        - '!bucketWatcher/**'
+        - 'queueWatcher/**'
+    handler: queueWatcher/handler.queueWatcherHandler
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - preparationQueue
+              - Arn
+          batchSize: 1
+          enabled: true
+    layers:
+      - {Ref: LayerDependenciesLambdaLayer}
+  readyWatcher:
+    memorySize: 128
+    package:
+      patterns:
+        - '!layers/**'
+        - '!bucketWatcher/**'
+        - 'queueWatcher/**'
+    handler: queueWatcher/handler.queueWatcherHandler
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - readyQueue
+              - Arn
+          batchSize: 1
+          enabled: true
+          
+    layers:
+      - {Ref: LayerDependenciesLambdaLayer}
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
