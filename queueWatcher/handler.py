@@ -38,7 +38,7 @@ def queueWatcherHandler(event, context):
         id_pedido,customer_name = filename.split('-')
         dynamo_item={}
         dynamo_item['pedido']=id_pedido
-        dynamo_item['datetime']='' #TODO: descobrir o campo datetime
+        dynamo_item['datetime']=record_body['eventTime']#TODO: descobrir o campo datetime
         dynamo_item['cliente']=customer_name
         dynamo_item['status']=folder
         
